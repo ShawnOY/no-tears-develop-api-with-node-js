@@ -13,3 +13,6 @@ function calc2 (topLine, baseLine) {
   const height = getHeight(topLine, baseLine)
   return (topLine + baseLine) * height / 2
 }
+
+calc1(1, 100)
+console.log(calc2(1, 100))
