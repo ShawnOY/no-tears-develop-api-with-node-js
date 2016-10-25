@@ -3,6 +3,12 @@
 const express = require('express')
 const bodyParser = require('body-parser')
 const app = express()
+const prize = [
+  'Banana',
+  'Apple',
+  'Tomato',
+  'Kiwi'
+]
 let users = {}
 
 app.use(bodyParser.json())
@@ -31,6 +37,14 @@ app.post('/user', function (request, response) {
   }
 
   response.send('User is created')
+})
+
+app.get('/gacha', function (request, response) {
+  if (Math.round(Math.random() * 100) >= 70) return response.send('You are not lucky')
+
+  const reward = prize[Math.round(Math.random() * 3)]
+
+  response.send('Your prize is ' + reward)
 })
 
 app.listen(8080, function () {
