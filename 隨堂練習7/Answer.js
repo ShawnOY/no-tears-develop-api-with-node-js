@@ -1,50 +1,25 @@
 'use strict'
 
 const express = require('express')
-const bodyParser = require('body-parser')
 const app = express()
-const prize = [
-  'Banana',
-  'Apple',
-  'Tomato',
-  'Kiwi'
-]
-let users = {}
 
-app.use(bodyParser.json())
+const quotes = {
+  Eng: [
+    'The value of a man resides in what he gives and not in what he is capable of receiving.',
+    'The mass of a body is a measure of its energy content.',
+    'Anyone who has never made a mistake has never tried anything new.'
+  ],
+  Zh: [
+    '一個人的價值，在於他貢獻了什麼，而不在於他能得到什麼。',
+    '一個物體的質量就是其所含能量的度量單位。',
+    '一個從未犯錯的人是因為他不曾嘗試新鮮事物。'
+  ]
+}
 
-app.get('/user/list', function (request, response) {
-  if (!(request.query.secret === 'LetMePass')) return response.send('You can not pass')
+app.get('/quote/get', function (request, response) {
+  if (!quotes[request.query.language]) return response.send('Language is not valide')
 
-  response.send(JSON.stringify(users))
-})
-
-app.get('/user', function (request, response) {
-  const account = users[request.query.account]
-
-  if (!account) return response.send('No Permission')
-  if (account.password !== request.query.password) return response.send('No Permission')
-
-  response.send(JSON.stringify(account))
-})
-
-app.post('/user', function (request, response) {
-  users[request.body.account] = {
-    firstName: request.body.firstName,
-    lastName: request.body.lastName,
-    email: request.body.email,
-    password: request.body.password
-  }
-
-  response.send('User is created')
-})
-
-app.get('/gacha', function (request, response) {
-  if (Math.round(Math.random() * 100) >= 70) return response.send('You are not lucky')
-
-  const reward = prize[Math.round(Math.random() * 3)]
-
-  response.send('Your prize is ' + reward)
+  response.send(quotes[request.query.language][Math.round(Math.random() * 2)])
 })
 
 app.listen(8080, function () {
